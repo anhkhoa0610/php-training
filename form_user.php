@@ -15,25 +15,6 @@ if (!empty($_GET['id'])) {
 }
 
 
-if (!empty($_POST['submit'])) {
-
-    $sent = $_POST['csrf_token'] ?? '';
-    $stored = $_SESSION['csrf'] ?? '';
-
-    // Kiểm tra token
-    if (!hash_equals($stored, $sent)) {
-        http_response_code(403);
-        echo 'Invalid CSRF token';
-        exit;
-    }
-
-    if (!empty($_id)) {
-        $userModel->updateUser($_POST);
-    } else {
-        $userModel->insertUser($_POST);
-    }
-    header('location: list_users.php');
-}
 
 ?>
 <!DOCTYPE html>
@@ -52,7 +33,7 @@ if (!empty($_POST['submit'])) {
             <div class="alert alert-warning" role="alert">
                 User form
             </div>
-            <form method="POST">
+            <form action="update_user.php" method="POST">
                 <input type="hidden" name="id" value="<?php echo $_id ?>">
                 <!-- Thêm CSRF token -->
                 <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf']) ?>">
